@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using JetBrains.Application.DataContext;
+using JetBrains.Application.Settings;
 using JetBrains.Collections;
+using JetBrains.DataFlow;
+using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.DataContext;
 using JetBrains.ReSharper.Feature.Services.Navigation.ContextNavigation;
@@ -12,13 +16,26 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.RiderTutorials.Utils;
 using JetBrains.Util;
+using ReSharperPlugin.TestLinker.Options;
 
 namespace ReSharperPlugin.TestLinker
 {
     [ContextNavigationProvider]
     public class NavigateToTestFilesProvider : INavigateFromHereProvider
     {
-        private readonly string[] _testClassSuffixes = { "Test", "Tests" };
+        private const string DefaultSuffixes = "Test, Tests";
+        private IEnumerable<string> _suffixes;
+
+        public NavigateToTestFilesProvider(Lifetime lifetime, ISettingsStore settingsStore)
+        {
+            if (settingsStore == null) return;
+
+            var concatenatedSuffixesOption = settingsStore
+                .BindToContextLive(lifetime, ContextRange.ApplicationWide)
+                .GetValueProperty(lifetime, (TestLinkerSettings key) => key.ConcatenatedSuffixes);
+
+            concatenatedSuffixesOption.Change.Advise_HasNew(lifetime, v => { _suffixes = DeriveSuffixes(v.New); });
+        }
 
         public IEnumerable<ContextNavigation> CreateWorkflow(IDataContext dataContext)
         {
@@ -50,6 +67,19 @@ namespace ReSharperPlugin.TestLinker
             return OrderByProjectAndClassName(testTypes);
         }
 
+        internal IEnumerable<string> DeriveSuffixes(string concatenatedSuffixes)
+        {
+            var results = new Collection<string>();
+
+            var stringToSplit = string.IsNullOrWhiteSpace(concatenatedSuffixes)
+                ? DefaultSuffixes
+                : concatenatedSuffixes;
+            var suffixes = stringToSplit.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var suffix in suffixes) results.Add(SanitizeSuffix(suffix));
+
+            return results;
+        }
+
         private Dictionary<ICSharpTypeDeclaration, IProject> FindTestTypesWithinProjectFile(
             IProjectFile fileOfProject, IClassDeclaration classToCheck)
         {
@@ -73,12 +103,14 @@ namespace ReSharperPlugin.TestLinker
             if (string.Equals(testCandidate.DeclaredName, classToCheck.DeclaredName)) return false;
 
             return testCandidate.DeclaredName.StartsWith(classToCheck.DeclaredName) &&
-                   _testClassSuffixes.Any(suffix =>
+                   _suffixes.Any(suffix =>
                        testCandidate.DeclaredName.EndsWith(suffix, StringComparison.OrdinalIgnoreCase));
         }
 
         private IOrderedEnumerable<KeyValuePair<ICSharpTypeDeclaration, IProject>> OrderByProjectAndClassName(
             Dictionary<ICSharpTypeDeclaration, IProject> testTypes)
             => testTypes.OrderBy(x => x.Value.Name).ThenBy(x => x.Key.DeclaredName);
+
+        private string SanitizeSuffix(string suffix) => suffix.Trim(' ', '.', '*');
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using FluentAssertions;
+using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -14,6 +15,7 @@ namespace ReSharperPlugin.TestLinker.Tests
     public class NavigateToTestFilesProviderTests
     {
         [Test]
+        [Ignore("Don't know how to mock yet")]
         public void FindTestTypes()
         {
             var csharpTypeMock = new Mock<ICSharpTypeDeclaration>();
@@ -31,13 +33,29 @@ namespace ReSharperPlugin.TestLinker.Tests
                 .Returns(new Collection<IProject> { projectMock.Object });
             var classDeclarationMock = new Mock<IClassDeclaration>();
             classDeclarationMock.Setup(type => type.DeclaredName).Returns("MyCode");
-            var testee = new NavigateToTestFilesProvider();
+            var testee = new NavigateToTestFilesProvider(new Lifetime(), null);
 
             var results = testee.FindTestTypesWithinSolution(solutionMock.Object, classDeclarationMock.Object);
 
             results.Should()
                 .BeEquivalentTo(
                     new KeyValuePair<ICSharpTypeDeclaration, IProject>(csharpTypeMock.Object, projectMock.Object));
+        }
+
+        [TestCase("", new[] { "Test", "Tests" })]
+        [TestCase("   ", new[] { "Test", "Tests" })]
+        [TestCase("Test,Tests", new[] { "Test", "Tests" })]
+        [TestCase("Test", new[] { "Test" })]
+        [TestCase(" Test", new[] { "Test" })]
+        [TestCase("Test ", new[] { "Test" })]
+        [TestCase("*.Test, *.Tests*", new[] { "Test", "Tests" })]
+        public void DeriveSuffixes(string concatenatedSuffixes, string[] expectedSuffixes)
+        {
+            var testee = new NavigateToTestFilesProvider(new Lifetime(), null);
+
+            var results = testee.DeriveSuffixes(concatenatedSuffixes);
+
+            results.Should().BeEquivalentTo(expectedSuffixes);
         }
     }
 }
