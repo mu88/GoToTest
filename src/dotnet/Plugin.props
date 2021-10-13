@@ -3,11 +3,11 @@
   <PropertyGroup>
     <SdkVersion>2021.2.0</SdkVersion>
 
-    <Title>TestLinker</Title>
+    <Title>GoToTest</Title>
     <Description>A ReSharper / Rider plugin for navigation between source code and the corresponding tests</Description>
 
     <Authors>mu88</Authors>
-    <Copyright>Copyright $([System.DateTime]::Now.Year) Maintainers of TestLinker</Copyright>
+    <Copyright>Copyright $([System.DateTime]::Now.Year) Maintainers of GoToTest</Copyright>
     <PackageTags>resharper plugin</PackageTags>
 
     <PackageProjectUrl>https://github.com/mu88/TestLinker</PackageProjectUrl>

@@ -8,7 +8,7 @@
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <AssemblyName>ReSharperPlugin.TestLinker</AssemblyName>
+    <AssemblyName>ReSharperPlugin.GoToTest</AssemblyName>
     <RootNamespace>$(AssemblyName)</RootNamespace>
     <IsPackable>false</IsPackable>
     <DefineConstants>$(DefineConstants);RIDER</DefineConstants>
@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-      <_Parameter1>ReSharperPlugin.TestLinker.Tests</_Parameter1>
+      <_Parameter1>ReSharperPlugin.GoToTest.Tests</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
 

@@ -10,17 +10,17 @@ using JetBrains.IDE.UI.Options;
 using JetBrains.Lifetimes;
 using JetBrains.ReSharper.Feature.Services.Daemon.OptionPages;
 
-namespace ReSharperPlugin.TestLinker.Options
+namespace ReSharperPlugin.GoToTest.Options
 {
     [OptionsPage(Id, PageTitle, typeof(OptionsThemedIcons.EnvironmentGeneral), ParentId = CodeInspectionPage.PID)]
-    public class TestLinkerOptionsPage : BeSimpleOptionsPage
+    public class GoToTestOptionsPage : BeSimpleOptionsPage
     {
-        private const string Id = nameof(TestLinkerOptionsPage);
-        private const string PageTitle = "TestLinker Options";
+        private const string Id = nameof(GoToTestOptionsPage);
+        private const string PageTitle = "Go to Test";
 
         private readonly Lifetime _lifetime;
 
-        public TestLinkerOptionsPage(
+        public GoToTestOptionsPage(
             Lifetime lifetime,
             OptionsPageContext optionsPageContext,
             OptionsSettingsSmartContext optionsSettingsSmartContext)
@@ -29,19 +29,19 @@ namespace ReSharperPlugin.TestLinker.Options
             _lifetime = lifetime;
 
             IProperty<string> concatenatedSuffixesOption =
-                new Property<string>(lifetime, $"{nameof(TestLinkerOptionsPage)}::ConcatenatedSuffixes");
+                new Property<string>(lifetime, $"{nameof(GoToTestOptionsPage)}::ConcatenatedSuffixes");
             concatenatedSuffixesOption.SetValue(
                 optionsSettingsSmartContext.StoreOptionsTransactionContext.GetValue(
-                    (TestLinkerSettings key) => key.ConcatenatedSuffixes));
+                    (GoToTestSettings key) => key.ConcatenatedSuffixes));
 
             concatenatedSuffixesOption.Change.Advise(lifetime, a =>
             {
                 if (!a.HasNew) return;
                 optionsSettingsSmartContext.StoreOptionsTransactionContext.SetValue(
-                    (TestLinkerSettings key) => key.ConcatenatedSuffixes, a.New);
+                    (GoToTestSettings key) => key.ConcatenatedSuffixes, a.New);
             });
 
-            AddTextBox((TestLinkerSettings x) => x.ConcatenatedSuffixes, "Suffixes of test classes");
+            AddTextBox((GoToTestSettings x) => x.ConcatenatedSuffixes, "Suffixes of test classes");
             AddCommentText("Enter suffixes of test classes to look for and separate them by comma");
         }
 

@@ -9,7 +9,7 @@ using JetBrains.ReSharper.Psi.Tree;
 using Moq;
 using NUnit.Framework;
 
-namespace ReSharperPlugin.TestLinker.Tests
+namespace ReSharperPlugin.GoToTest.Tests
 {
     [TestFixture]
     public class NavigateToTestFilesProviderTests

@@ -16,9 +16,9 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.RiderTutorials.Utils;
 using JetBrains.Util;
-using ReSharperPlugin.TestLinker.Options;
+using ReSharperPlugin.GoToTest.Options;
 
-namespace ReSharperPlugin.TestLinker
+namespace ReSharperPlugin.GoToTest
 {
     [ContextNavigationProvider]
     public class NavigateToTestFilesProvider : INavigateFromHereProvider
@@ -32,7 +32,7 @@ namespace ReSharperPlugin.TestLinker
 
             var concatenatedSuffixesOption = settingsStore
                 .BindToContextLive(lifetime, ContextRange.ApplicationWide)
-                .GetValueProperty(lifetime, (TestLinkerSettings key) => key.ConcatenatedSuffixes);
+                .GetValueProperty(lifetime, (GoToTestSettings key) => key.ConcatenatedSuffixes);
 
             concatenatedSuffixesOption.Change.Advise_HasNew(lifetime, v => { _suffixes = DeriveSuffixes(v.New); });
         }

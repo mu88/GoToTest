@@ -1,11 +1,11 @@
-﻿# Default ignored files
+# Default ignored files
 /shelf/
 /workspace.xml
 # Rider ignored files
-/modules.xml
-/contentModel.xml
+/.idea.ReSharperPlugin.GoToTest.iml
 /projectSettingsUpdater.xml
-/.idea.TestLinker.iml
+/contentModel.xml
+/modules.xml
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml

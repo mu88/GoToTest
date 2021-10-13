@@ -19,7 +19,7 @@ object TestLinkerModel : Ext(SolutionModel.Solution) {
 
     init {
         //setting(CSharp50Generator.Namespace, "ReSharperPlugin.TestLinker.Rider.Model")
-        //setting(Kotlin11Generator.Namespace, "com.jetbrains.rider.testlinker.model")
+        //setting(Kotlin11Generator.Namespace, "com.jetbrains.rider.gototest.model")
 
         property("myString", string)
         property("myBool", bool)

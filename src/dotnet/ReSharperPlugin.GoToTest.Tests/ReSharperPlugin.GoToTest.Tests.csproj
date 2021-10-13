@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ReSharperPlugin.TestLinker\ReSharperPlugin.TestLinker.csproj" />
+    <ProjectReference Include="..\ReSharperPlugin.GoToTest\ReSharperPlugin.GoToTest.csproj" />
   </ItemGroup>
 
   <ItemGroup>
