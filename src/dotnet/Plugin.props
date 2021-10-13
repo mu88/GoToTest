@@ -1,0 +1,18 @@
+﻿<Project>
+
+  <PropertyGroup>
+    <SdkVersion>2021.2.0</SdkVersion>
+
+    <Title>TestLinker</Title>
+    <Description>Description</Description>
+
+    <Authors>mu88</Authors>
+    <Copyright>Copyright $([System.DateTime]::Now.Year) Maintainers of TestLinker</Copyright>
+    <PackageTags>resharper plugin</PackageTags>
+
+    <PackageProjectUrl></PackageProjectUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageIconUrl></PackageIconUrl>
+  </PropertyGroup>
+
+</Project>
